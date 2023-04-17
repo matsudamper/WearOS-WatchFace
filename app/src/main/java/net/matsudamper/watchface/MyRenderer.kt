@@ -46,8 +46,8 @@ class MyRenderer(
         it.strokeWidth = 2f
     }
     private val shortTimeDiskPaint = Paint().also {
-        it.color = Color.WHITE
-        it.strokeWidth = 1f
+        it.color = Color.DKGRAY
+        it.strokeWidth = 2f
     }
     private val digitalTimePaint = Paint().also {
         it.color = Color.WHITE
@@ -93,7 +93,7 @@ class MyRenderer(
 
         if (renderParameters.watchFaceLayers.contains(WatchFaceLayer.COMPLICATIONS_OVERLAY)) {
             drawDigitalTime(
-                y = 60f,
+                y = 80f,
                 canvas = canvas,
                 zonedDateTime = zonedDateTime,
                 bounds = bounds,
@@ -118,7 +118,7 @@ class MyRenderer(
         val betWeenAngle = 360.0f / lineCount
 
         val radius: Float = min(bounds.width(), bounds.height()) / 2f
-        val longLineLengthFraction = 0.1f
+        val longLineLengthFraction = 0.05f
         val innerLongLineFraction = radius * (1 - longLineLengthFraction)
         val shortLineLengthFraction = 0.05f
         val innerShortLineFraction = radius * (1 - shortLineLengthFraction)
@@ -175,8 +175,8 @@ class MyRenderer(
     ) {
         val padding = outCirclePaint.strokeWidth
         val rectF = RectF(
-            0f + (padding),
-            0f + (padding),
+            0f + padding,
+            0f + padding,
             bounds.width().toFloat() - padding,
             bounds.height().toFloat() - padding
         )
