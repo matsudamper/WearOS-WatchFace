@@ -23,6 +23,7 @@ import java.lang.StrictMath.cos
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatterBuilder
 import java.time.temporal.ChronoField
+import kotlin.math.max
 import kotlin.math.sin
 
 
@@ -57,6 +58,10 @@ class MyRenderer(
         paint.style = Paint.Style.STROKE
         paint.strokeWidth = outCirclePadding
         paint.color = Color.MAGENTA
+    }
+    private val timeNumberPaint = Paint().also {
+        it.color = Color.WHITE
+        it.textSize = 24f
     }
 
     private val scope: CoroutineScope =
@@ -123,21 +128,37 @@ class MyRenderer(
         val shortLineLengthFraction = 0.05f
         val innerShortLineFraction = radius * (1 - shortLineLengthFraction)
         for (index in 0 until lineCount) {
-            val drawAngle = (betWeenAngle * index).toDouble()
+            val drawAngle = (betWeenAngle * (index + (5 * 6))).toDouble()
+            val sin = -sin(Math.toRadians(drawAngle)).toFloat()
+            val cos = cos(Math.toRadians(drawAngle)).toFloat()
+
             if (index % 5 == 0) {
+                val hour = (index / 5).let {
+                    if (it == 0) 12 else it
+                }.toString()
+                val numberBounds = Rect().also {
+                    timeNumberPaint.getTextBounds(hour, 0, hour.length, it)
+                }
+
+                canvas.drawText(
+                    hour,
+                    centerX + sin * (radius * (1 - longLineLengthFraction - 0.1f)) - (numberBounds.width() / 2f),
+                    centerY + cos * (radius * (1 - longLineLengthFraction - 0.1f)) + (numberBounds.height() / 2f),
+                    timeNumberPaint
+                )
                 canvas.drawLine(
-                    centerX + sin(Math.toRadians(drawAngle)).toFloat() * innerLongLineFraction,
-                    centerY + cos(Math.toRadians(drawAngle)).toFloat() * innerLongLineFraction,
-                    centerX + sin(Math.toRadians(drawAngle)).toFloat() * radius,
-                    centerY + cos(Math.toRadians(drawAngle)).toFloat() * radius,
+                    centerX + sin * innerLongLineFraction,
+                    centerY + cos * innerLongLineFraction,
+                    centerX + sin * radius,
+                    centerY + cos * radius,
                     longTimeDiskPaint,
                 )
             } else {
                 canvas.drawLine(
-                    centerX + sin(Math.toRadians(drawAngle)).toFloat() * innerShortLineFraction,
-                    centerY + cos(Math.toRadians(drawAngle)).toFloat() * innerShortLineFraction,
-                    centerX + sin(Math.toRadians(drawAngle)).toFloat() * radius,
-                    centerY + cos(Math.toRadians(drawAngle)).toFloat() * radius,
+                    centerX + sin * innerShortLineFraction,
+                    centerY + cos * innerShortLineFraction,
+                    centerX + sin * radius,
+                    centerY + cos * radius,
                     shortTimeDiskPaint,
                 )
             }
