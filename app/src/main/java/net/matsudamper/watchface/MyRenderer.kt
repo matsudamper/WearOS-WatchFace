@@ -88,6 +88,11 @@ class MyRenderer(
         zonedDateTime: ZonedDateTime,
         sharedAssets: SharedAssets
     ) {
+        for ((_, complication) in complicationSlotsManager.complicationSlots) {
+            if (complication.enabled) {
+                complication.renderHighlightLayer(canvas, zonedDateTime, renderParameters)
+            }
+        }
     }
 
     override fun render(
@@ -97,6 +102,14 @@ class MyRenderer(
         sharedAssets: SharedAssets
     ) {
         Log.d("LOG", "render: ${renderParameters.watchFaceLayers.toList()}")
+
+        for ((_, complication) in complicationSlotsManager.complicationSlots) {
+            Log.d("LOG", "complication.enabled: ${complication.enabled}")
+            if (complication.enabled) {
+                complication.render(canvas, zonedDateTime, renderParameters)
+            }
+        }
+
         val backgroundColor = if (renderParameters.drawMode == DrawMode.AMBIENT) {
             Color.DKGRAY
         } else {
