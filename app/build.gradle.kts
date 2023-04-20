@@ -72,4 +72,5 @@ dependencies {
     androidTestImplementation(libs.ui.test.junit4)
     debugImplementation(libs.ui.tooling)
     debugImplementation(libs.ui.test.manifest)
+    implementation("androidx.wear.watchface:watchface-complications-rendering:1.1.1")
 }

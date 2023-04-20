@@ -4,11 +4,13 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.Path
 import android.graphics.Rect
 import android.graphics.RectF
 import android.util.Log
 import android.view.SurfaceHolder
 import androidx.wear.watchface.CanvasType
+import androidx.wear.watchface.ComplicationSlotsManager
 import androidx.wear.watchface.DrawMode
 import androidx.wear.watchface.Renderer
 import androidx.wear.watchface.WatchState
@@ -23,7 +25,6 @@ import java.lang.StrictMath.cos
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatterBuilder
 import java.time.temporal.ChronoField
-import kotlin.math.max
 import kotlin.math.sin
 
 
@@ -31,6 +32,7 @@ class MyRenderer(
     context: Context,
     surfaceHolder: SurfaceHolder,
     currentUserStyleRepository: CurrentUserStyleRepository,
+    private val complicationSlotsManager: ComplicationSlotsManager,
     watchState: WatchState
 ) : Renderer.CanvasRenderer2<Renderer.SharedAssets>(
     surfaceHolder = surfaceHolder,
@@ -62,6 +64,11 @@ class MyRenderer(
     private val timeNumberPaint = Paint().also {
         it.color = Color.WHITE
         it.textSize = 24f
+    }
+    private val functionCirclePaint = Paint().also {
+        it.style = Paint.Style.STROKE
+        it.color = Color.LTGRAY
+        it.strokeWidth = 2f
     }
 
     private val scope: CoroutineScope =
@@ -98,7 +105,7 @@ class MyRenderer(
 
         if (renderParameters.watchFaceLayers.contains(WatchFaceLayer.COMPLICATIONS_OVERLAY)) {
             drawDigitalTime(
-                y = 80f,
+                y = 170f,
                 canvas = canvas,
                 zonedDateTime = zonedDateTime,
                 bounds = bounds,
@@ -115,6 +122,16 @@ class MyRenderer(
                 canvas = canvas,
                 bounds = bounds,
             )
+            (1..6).forEach { index ->
+                val betWeenAngle: Double = (360 / 6f).toDouble()
+                drawCircle(
+                    canvas = canvas,
+                    bounds = bounds,
+                    angle = betWeenAngle * index,
+                    centerFraction = 0.25f,
+                    sizeFraction = 0.2f,
+                )
+            }
         }
     }
 
@@ -204,25 +221,37 @@ class MyRenderer(
         canvas.drawArc(rectF, -90f, 360 * fraction, false, outCirclePaint)
     }
 
-    private fun drawTopMiddleCircle(
+    @Suppress("SameParameterValue")
+    private fun drawCircle(
         canvas: Canvas,
         bounds: Rect,
-        radiusFraction: Float,
-        gapBetweenOuterCircleAndBorderFraction: Float
+        angle: Double,
+        centerFraction: Float,
+        sizeFraction: Float,
     ) {
+        val screenRadius: Float = (min(bounds.width(), bounds.height()) / 2f)
 
-        // X and Y coordinates of the center of the circle.
-        val centerX = 0.5f * bounds.width().toFloat()
-        val centerY = bounds.width() * (gapBetweenOuterCircleAndBorderFraction + radiusFraction)
+        val sin = -sin(Math.toRadians(angle)).toFloat()
+        val cos = cos(Math.toRadians(angle)).toFloat()
+
+        val circleSize = screenRadius * sizeFraction
+
+        val x = centerX + sin * (screenRadius * 1f).minus(circleSize).minus(screenRadius * centerFraction)
+        val y = centerY + cos * (screenRadius * 1f).minus(circleSize).minus(screenRadius * centerFraction)
 
         canvas.drawCircle(
-            centerX,
-            centerY,
-            radiusFraction * bounds.width(),
-            Paint().also {
-                it.color = Color.GREEN
-            },
+            x,
+            y,
+            circleSize,
+            functionCirclePaint
         )
+        val rectF = RectF(
+            x - circleSize,
+            y - circleSize,
+            x + circleSize,
+            y + circleSize,
+        )
+        canvas.drawArc(rectF, 0f, 360f, false, functionCirclePaint)
     }
 
     override fun onDestroy() {
