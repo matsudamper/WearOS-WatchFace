@@ -2,8 +2,9 @@ package net.matsudamper.watchface.complication
 
 import kotlin.math.cos
 import kotlin.math.sin
+
 sealed class CustomComplicationSlot {
-    private val sizeFraction = 0.1f // 直径に対する割合
+    private val sizeFraction = 0.125f // 直径に対する割合
     private val centerFraction = 0.25f
 
     abstract val id: Int
@@ -36,5 +37,15 @@ sealed class CustomComplicationSlot {
     object Slot1 : CustomComplicationSlot() {
         override val id: Int = 102
         override val angle: Double = (360 / 6f) * 4.toDouble()
+    }
+
+    object Slot2 : CustomComplicationSlot() {
+        override val id: Int = 103
+        override val angle: Double = (360 / 6f) * 5.toDouble()
+    }
+
+    object Slot3 : CustomComplicationSlot() {
+        override val id: Int = 104
+        override val angle: Double = (360 / 6f) * 6.toDouble()
     }
 }

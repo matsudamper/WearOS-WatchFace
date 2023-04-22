@@ -1,6 +1,7 @@
 package net.matsudamper.watchface
 
 import android.content.Context
+import android.graphics.Color
 import android.graphics.RectF
 import android.view.SurfaceHolder
 import androidx.wear.watchface.CanvasComplicationFactory
@@ -24,17 +25,24 @@ import net.matsudamper.watchface.complication.CustomComplicationSlot
 
 class MyWatchFaceService : WatchFaceService() {
 
-//    override fun createUserStyleSchema(): UserStyleSchema {
-//        return createUserStyleSchema(context = this)
-//    }
+    override fun createUserStyleSchema(): UserStyleSchema {
+        return super.createUserStyleSchema()
+    }
 
     // https://github.com/android/wear-os-samples/blob/641c839ca3d86e685400ab96df5984ad0a85490a/WatchFaceKotlin/app/src/main/java/com/example/android/wearable/alpha/utils/ComplicationUtils.kt#L78
     override fun createComplicationSlotsManager(
         currentUserStyleRepository: CurrentUserStyleRepository,
     ): ComplicationSlotsManager {
         val defaultCanvasComplicationFactory = CanvasComplicationFactory { watchState, listener ->
+            val complicationDrawable = ComplicationDrawable(this).also { drawable ->
+                drawable.activeStyle.backgroundColor = Color.WHITE
+                drawable.activeStyle.textColor = Color.RED
+                drawable.activeStyle.iconColor = Color.RED
+                drawable.activeStyle.textSize = 20
+            }
+
             CanvasComplicationDrawable(
-                ComplicationDrawable.getDrawable(this, R.drawable.complication_red_style)!!,
+                complicationDrawable,
                 watchState,
                 listener
             )
@@ -42,19 +50,23 @@ class MyWatchFaceService : WatchFaceService() {
 
         println("${CustomComplicationSlot.Slot0}")
         println("${CustomComplicationSlot.Slot1}")
+        println("${CustomComplicationSlot.Slot2}")
+        println("${CustomComplicationSlot.Slot3}")
 
-        val complicationSlot1 = ComplicationSlot.createRoundRectComplicationSlotBuilder(
+        val supportedTypes = listOf(
+            ComplicationType.RANGED_VALUE,
+            ComplicationType.MONOCHROMATIC_IMAGE,
+            ComplicationType.SHORT_TEXT,
+            ComplicationType.SMALL_IMAGE,
+            ComplicationType.GOAL_PROGRESS,
+        )
+        val complicationSlot0 = ComplicationSlot.createRoundRectComplicationSlotBuilder(
             id = CustomComplicationSlot.Slot0.id,
             canvasComplicationFactory = defaultCanvasComplicationFactory,
-            supportedTypes = listOf(
-                ComplicationType.RANGED_VALUE,
-                ComplicationType.MONOCHROMATIC_IMAGE,
-                ComplicationType.SHORT_TEXT,
-                ComplicationType.SMALL_IMAGE
-            ),
+            supportedTypes = supportedTypes,
             defaultDataSourcePolicy = DefaultComplicationDataSourcePolicy(
                 SystemDataSources.DATA_SOURCE_DAY_OF_WEEK,
-                ComplicationType.SHORT_TEXT
+                ComplicationType.SHORT_TEXT,
             ),
             bounds = ComplicationSlotBounds(
                 RectF(
@@ -66,18 +78,13 @@ class MyWatchFaceService : WatchFaceService() {
             ),
         ).build()
 
-        val complicationSlot2 = ComplicationSlot.createRoundRectComplicationSlotBuilder(
+        val complicationSlot1 = ComplicationSlot.createRoundRectComplicationSlotBuilder(
             id = CustomComplicationSlot.Slot1.id,
             canvasComplicationFactory = defaultCanvasComplicationFactory,
-            supportedTypes = listOf(
-                ComplicationType.RANGED_VALUE,
-                ComplicationType.MONOCHROMATIC_IMAGE,
-                ComplicationType.SHORT_TEXT,
-                ComplicationType.SMALL_IMAGE
-            ),
+            supportedTypes = supportedTypes,
             defaultDataSourcePolicy = DefaultComplicationDataSourcePolicy(
                 SystemDataSources.DATA_SOURCE_STEP_COUNT,
-                ComplicationType.SHORT_TEXT
+                ComplicationType.SMALL_IMAGE,
             ),
             bounds = ComplicationSlotBounds(
                 RectF(
@@ -89,8 +96,49 @@ class MyWatchFaceService : WatchFaceService() {
             ),
         ).build()
 
+//        val complicationSlot2 = ComplicationSlot.createRoundRectComplicationSlotBuilder(
+//            id = CustomComplicationSlot.Slot2.id,
+//            canvasComplicationFactory = defaultCanvasComplicationFactory,
+//            supportedTypes = supportedTypes,
+//            defaultDataSourcePolicy = DefaultComplicationDataSourcePolicy(
+//                SystemDataSources.DATA_SOURCE_STEP_COUNT,
+//                ComplicationType.GOAL_PROGRESS,
+//            ),
+//            bounds = ComplicationSlotBounds(
+//                RectF(
+//                    CustomComplicationSlot.Slot2.left,
+//                    CustomComplicationSlot.Slot2.top,
+//                    CustomComplicationSlot.Slot2.right,
+//                    CustomComplicationSlot.Slot2.bottom,
+//                )
+//            ),
+//        ).build()
+//
+//        val complicationSlot3 = ComplicationSlot.createRoundRectComplicationSlotBuilder(
+//            id = CustomComplicationSlot.Slot3.id,
+//            canvasComplicationFactory = defaultCanvasComplicationFactory,
+//            supportedTypes = supportedTypes,
+//            defaultDataSourcePolicy = DefaultComplicationDataSourcePolicy(
+//                SystemDataSources.DATA_SOURCE_WATCH_BATTERY,
+//                ComplicationType.GOAL_PROGRESS,
+//            ),
+//            bounds = ComplicationSlotBounds(
+//                RectF(
+//                    CustomComplicationSlot.Slot3.left,
+//                    CustomComplicationSlot.Slot3.top,
+//                    CustomComplicationSlot.Slot3.right,
+//                    CustomComplicationSlot.Slot3.bottom,
+//                )
+//            ),
+//        ).build()
+
         return ComplicationSlotsManager(
-            listOf(complicationSlot1, complicationSlot2),
+            listOf(
+                complicationSlot0,
+                complicationSlot1,
+//                complicationSlot2,
+//                complicationSlot3,
+            ),
             currentUserStyleRepository
         )
     }

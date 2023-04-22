@@ -7,6 +7,8 @@ import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.RectF
 import android.view.SurfaceHolder
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.wear.watchface.CanvasType
 import androidx.wear.watchface.ComplicationSlotsManager
 import androidx.wear.watchface.DrawMode
@@ -73,7 +75,6 @@ class MyRenderer(
     private val scope: CoroutineScope =
         CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
 
-
     override suspend fun createSharedAssets(): SharedAssets {
         return object : SharedAssets {
             override fun onDestroy() {
@@ -110,7 +111,7 @@ class MyRenderer(
 
         if (renderParameters.watchFaceLayers.contains(WatchFaceLayer.COMPLICATIONS_OVERLAY)) {
             drawDigitalTime(
-                y = 170f,
+                y = bounds.height() * 0.5f,
                 canvas = canvas,
                 zonedDateTime = zonedDateTime,
                 bounds = bounds,
@@ -134,7 +135,7 @@ class MyRenderer(
                     bounds = bounds,
                     angle = betWeenAngle * index,
                     centerFraction = 0.25f,
-                    sizeFraction = 0.2f,
+                    sizeFraction = 0.25f,
                 )
             }
             drawCircle(
