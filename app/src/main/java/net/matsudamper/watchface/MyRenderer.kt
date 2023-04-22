@@ -4,10 +4,8 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
-import android.graphics.Path
 import android.graphics.Rect
 import android.graphics.RectF
-import android.util.Log
 import android.view.SurfaceHolder
 import androidx.wear.watchface.CanvasType
 import androidx.wear.watchface.ComplicationSlotsManager
@@ -20,6 +18,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import net.matsudamper.watchface.complication.CustomComplicationSlot
 import java.lang.Integer.min
 import java.lang.StrictMath.cos
 import java.time.ZonedDateTime
@@ -101,8 +100,7 @@ class MyRenderer(
         zonedDateTime: ZonedDateTime,
         sharedAssets: SharedAssets
     ) {
-        Log.d("LOG", "render: ${renderParameters.watchFaceLayers.toList()}")
-
+//        Log.d("LOG", "render: ${renderParameters.watchFaceLayers.toList()}")
 
         val backgroundColor = if (renderParameters.drawMode == DrawMode.AMBIENT) {
             Color.DKGRAY
@@ -139,10 +137,20 @@ class MyRenderer(
                     sizeFraction = 0.2f,
                 )
             }
+            drawCircle(
+                canvas = canvas,
+                bounds = bounds,
+                slot = CustomComplicationSlot.Slot0,
+            )
+            drawCircle(
+                canvas = canvas,
+                bounds = bounds,
+                slot = CustomComplicationSlot.Slot1,
+            )
         }
 
         for ((_, complication) in complicationSlotsManager.complicationSlots) {
-            Log.d("LOG", "complication.enabled: ${complication.enabled}")
+//            Log.d("LOG", "complication.enabled: ${complication.enabled}")
             if (complication.enabled) {
                 complication.render(canvas, zonedDateTime, renderParameters)
             }
@@ -250,20 +258,28 @@ class MyRenderer(
 
         val circleSize = screenRadius * sizeFraction
 
-        val x = centerX + sin * (screenRadius * 1f).minus(circleSize).minus(screenRadius * centerFraction)
-        val y = centerY + cos * (screenRadius * 1f).minus(circleSize).minus(screenRadius * centerFraction)
+        val x = centerX + sin * screenRadius.minus(circleSize).minus(screenRadius * centerFraction)
+        val y = centerY + cos * screenRadius.minus(circleSize).minus(screenRadius * centerFraction)
 
-        canvas.drawCircle(
-            x,
-            y,
-            circleSize,
-            functionCirclePaint
-        )
         val rectF = RectF(
             x - circleSize,
             y - circleSize,
             x + circleSize,
             y + circleSize,
+        )
+        canvas.drawArc(rectF, 0f, 360f, false, functionCirclePaint)
+    }
+
+    private fun drawCircle(
+        canvas: Canvas,
+        bounds: Rect,
+        slot: CustomComplicationSlot
+    ) {
+        val rectF = RectF(
+            bounds.width() * slot.left,
+            bounds.height() * slot.top,
+            bounds.width() * slot.right,
+            bounds.height() * slot.bottom,
         )
         canvas.drawArc(rectF, 0f, 360f, false, functionCirclePaint)
     }

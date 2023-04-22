@@ -20,15 +20,7 @@ import androidx.wear.watchface.style.CurrentUserStyleRepository
 import androidx.wear.watchface.style.UserStyleSchema
 import androidx.wear.watchface.style.UserStyleSetting
 import androidx.wear.watchface.style.WatchFaceLayer
-
-object CustomComplicationSlot {
-    object ID1 {
-//        private val LEFT =
-//        private val TOP =
-//        private val RIGHT =
-//        private val BOTTOM =
-    }
-}
+import net.matsudamper.watchface.complication.CustomComplicationSlot
 
 class MyWatchFaceService : WatchFaceService() {
 
@@ -48,8 +40,11 @@ class MyWatchFaceService : WatchFaceService() {
             )
         }
 
+        println("${CustomComplicationSlot.Slot0}")
+        println("${CustomComplicationSlot.Slot1}")
+
         val complicationSlot1 = ComplicationSlot.createRoundRectComplicationSlotBuilder(
-            id = 101,
+            id = CustomComplicationSlot.Slot0.id,
             canvasComplicationFactory = defaultCanvasComplicationFactory,
             supportedTypes = listOf(
                 ComplicationType.RANGED_VALUE,
@@ -63,13 +58,16 @@ class MyWatchFaceService : WatchFaceService() {
             ),
             bounds = ComplicationSlotBounds(
                 RectF(
-                    0.2f, 0.4f, 0.4f, 0.6f
+                    CustomComplicationSlot.Slot0.left,
+                    CustomComplicationSlot.Slot0.top,
+                    CustomComplicationSlot.Slot0.right,
+                    CustomComplicationSlot.Slot0.bottom,
                 )
             ),
         ).build()
 
         val complicationSlot2 = ComplicationSlot.createRoundRectComplicationSlotBuilder(
-            id = 102,
+            id = CustomComplicationSlot.Slot1.id,
             canvasComplicationFactory = defaultCanvasComplicationFactory,
             supportedTypes = listOf(
                 ComplicationType.RANGED_VALUE,
@@ -83,7 +81,10 @@ class MyWatchFaceService : WatchFaceService() {
             ),
             bounds = ComplicationSlotBounds(
                 RectF(
-                    0.6f, 0.4f, 0.8f, 0.6f
+                    CustomComplicationSlot.Slot1.left,
+                    CustomComplicationSlot.Slot1.top,
+                    CustomComplicationSlot.Slot1.right,
+                    CustomComplicationSlot.Slot1.bottom,
                 )
             ),
         ).build()
@@ -116,6 +117,7 @@ class MyWatchFaceService : WatchFaceService() {
 const val COLOR_STYLE_SETTING = "color_style_setting"
 const val DRAW_HOUR_PIPS_STYLE_SETTING = "draw_hour_pips_style_setting"
 const val WATCH_HAND_LENGTH_STYLE_SETTING = "watch_hand_length_style_setting"
+
 /**
  * https://github.com/android/wear-os-samples/blob/641c839ca3d86e685400ab96df5984ad0a85490a/WatchFaceKotlin/app/src/main/java/com/example/android/wearable/alpha/utils/UserStyleSchemaUtils.kt#L41
  */
