@@ -103,12 +103,6 @@ class MyRenderer(
     ) {
         Log.d("LOG", "render: ${renderParameters.watchFaceLayers.toList()}")
 
-        for ((_, complication) in complicationSlotsManager.complicationSlots) {
-            Log.d("LOG", "complication.enabled: ${complication.enabled}")
-            if (complication.enabled) {
-                complication.render(canvas, zonedDateTime, renderParameters)
-            }
-        }
 
         val backgroundColor = if (renderParameters.drawMode == DrawMode.AMBIENT) {
             Color.DKGRAY
@@ -144,6 +138,13 @@ class MyRenderer(
                     centerFraction = 0.25f,
                     sizeFraction = 0.2f,
                 )
+            }
+        }
+
+        for ((_, complication) in complicationSlotsManager.complicationSlots) {
+            Log.d("LOG", "complication.enabled: ${complication.enabled}")
+            if (complication.enabled) {
+                complication.render(canvas, zonedDateTime, renderParameters)
             }
         }
     }

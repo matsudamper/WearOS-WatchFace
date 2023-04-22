@@ -49,18 +49,17 @@ class MyWatchFaceService : WatchFaceService() {
         }
 
         val complicationSlot1 = ComplicationSlot.createRoundRectComplicationSlotBuilder(
-            id = 100,
+            id = 101,
             canvasComplicationFactory = defaultCanvasComplicationFactory,
             supportedTypes = listOf(
                 ComplicationType.RANGED_VALUE,
                 ComplicationType.MONOCHROMATIC_IMAGE,
                 ComplicationType.SHORT_TEXT,
-                ComplicationType.LONG_TEXT,
-                ComplicationType.SMALL_IMAGE,
+                ComplicationType.SMALL_IMAGE
             ),
             defaultDataSourcePolicy = DefaultComplicationDataSourcePolicy(
-                SystemDataSources.DATA_SOURCE_STEP_COUNT,
-                ComplicationType.LONG_TEXT
+                SystemDataSources.DATA_SOURCE_DAY_OF_WEEK,
+                ComplicationType.SHORT_TEXT
             ),
             bounds = ComplicationSlotBounds(
                 RectF(
@@ -69,8 +68,28 @@ class MyWatchFaceService : WatchFaceService() {
             ),
         ).build()
 
+        val complicationSlot2 = ComplicationSlot.createRoundRectComplicationSlotBuilder(
+            id = 102,
+            canvasComplicationFactory = defaultCanvasComplicationFactory,
+            supportedTypes = listOf(
+                ComplicationType.RANGED_VALUE,
+                ComplicationType.MONOCHROMATIC_IMAGE,
+                ComplicationType.SHORT_TEXT,
+                ComplicationType.SMALL_IMAGE
+            ),
+            defaultDataSourcePolicy = DefaultComplicationDataSourcePolicy(
+                SystemDataSources.DATA_SOURCE_STEP_COUNT,
+                ComplicationType.SHORT_TEXT
+            ),
+            bounds = ComplicationSlotBounds(
+                RectF(
+                    0.6f, 0.4f, 0.8f, 0.6f
+                )
+            ),
+        ).build()
+
         return ComplicationSlotsManager(
-            listOf(complicationSlot1),
+            listOf(complicationSlot1, complicationSlot2),
             currentUserStyleRepository
         )
     }
