@@ -3,6 +3,7 @@ package net.matsudamper.watchface
 import android.content.Context
 import android.graphics.Color
 import android.graphics.RectF
+import android.graphics.Typeface
 import android.view.SurfaceHolder
 import androidx.wear.watchface.CanvasComplicationFactory
 import androidx.wear.watchface.ComplicationSlot
@@ -35,7 +36,11 @@ class MyWatchFaceService : WatchFaceService() {
             val complicationDrawable = ComplicationDrawable(this).also { drawable ->
                 listOf(drawable.activeStyle, drawable.ambientStyle).forEach {
                     it.backgroundColor = Color.TRANSPARENT
+
+                    it.textSize = 26
                     it.textColor = Color.WHITE
+                    it.setTextTypeface(Typeface.create("sans-serif-condensed", Typeface.BOLD))
+
                     it.iconColor = Color.WHITE
 
                     it.borderColor = Color.WHITE
@@ -44,6 +49,8 @@ class MyWatchFaceService : WatchFaceService() {
                     it.highlightColor = Color.RED
 
                     it.titleColor = Color.WHITE
+                    it.titleSize = 26
+
                     it.rangedValuePrimaryColor = Color.RED
                     it.rangedValueSecondaryColor = Color.LTGRAY
                     it.rangedValueRingWidth = 4
