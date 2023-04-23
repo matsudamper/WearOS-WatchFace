@@ -1,17 +1,12 @@
 package net.matsudamper.watchface
 
 import android.content.Context
-import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.RectF
-import android.util.Log
 import android.view.SurfaceHolder
-import androidx.activity.ComponentActivity
 import androidx.wear.watchface.CanvasComplicationFactory
 import androidx.wear.watchface.ComplicationSlot
 import androidx.wear.watchface.ComplicationSlotsManager
-import androidx.wear.watchface.DrawMode
-import androidx.wear.watchface.RenderParameters
 import androidx.wear.watchface.WatchFace
 import androidx.wear.watchface.WatchFaceService
 import androidx.wear.watchface.WatchFaceType
@@ -19,22 +14,14 @@ import androidx.wear.watchface.WatchState
 import androidx.wear.watchface.complications.ComplicationSlotBounds
 import androidx.wear.watchface.complications.DefaultComplicationDataSourcePolicy
 import androidx.wear.watchface.complications.SystemDataSources
-import androidx.wear.watchface.complications.data.ComplicationData
 import androidx.wear.watchface.complications.data.ComplicationType
 import androidx.wear.watchface.complications.rendering.CanvasComplicationDrawable
 import androidx.wear.watchface.complications.rendering.ComplicationDrawable
 import androidx.wear.watchface.complications.rendering.ComplicationStyle
-import androidx.wear.watchface.editor.EditorSession
 import androidx.wear.watchface.style.CurrentUserStyleRepository
-import androidx.wear.watchface.style.UserStyle
 import androidx.wear.watchface.style.UserStyleSchema
 import androidx.wear.watchface.style.UserStyleSetting
 import androidx.wear.watchface.style.WatchFaceLayer
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.emitAll
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.yield
 import net.matsudamper.watchface.complication.CustomComplicationSlot
 
 class MyWatchFaceService : WatchFaceService() {
@@ -43,20 +30,26 @@ class MyWatchFaceService : WatchFaceService() {
         return super.createUserStyleSchema()
     }
 
-    private val defaultCanvasComplicationFactory
-        get() = CanvasComplicationFactory { watchState, listener ->
+    private val defaultCanvasComplicationFactory =
+        CanvasComplicationFactory { watchState, listener ->
             val complicationDrawable = ComplicationDrawable(this).also { drawable ->
-                drawable.activeStyle.backgroundColor = Color.TRANSPARENT
-                drawable.activeStyle.textColor = Color.WHITE
-                drawable.activeStyle.iconColor = Color.WHITE
-                drawable.activeStyle.borderColor = Color.WHITE
-                drawable.activeStyle.textSize = 26
+                listOf(drawable.activeStyle, drawable.ambientStyle).forEach {
+                    it.backgroundColor = Color.TRANSPARENT
+                    it.textColor = Color.WHITE
+                    it.iconColor = Color.WHITE
 
-                drawable.ambientStyle.backgroundColor = Color.TRANSPARENT
-                drawable.ambientStyle.textColor = Color.WHITE
-                drawable.ambientStyle.iconColor = Color.WHITE
-                drawable.ambientStyle.borderColor = Color.WHITE
-                drawable.ambientStyle.textSize = 26
+                    it.borderColor = Color.WHITE
+                    it.borderStyle = ComplicationStyle.BORDER_STYLE_NONE
+
+                    it.highlightColor = Color.RED
+
+                    it.titleColor = Color.WHITE
+                    it.rangedValuePrimaryColor = Color.YELLOW
+                    it.rangedValueSecondaryColor = Color.CYAN
+                    it.rangedValueRingWidth = 4
+
+                    it.textSize = 50
+                }
             }
 
             CanvasComplicationDrawable(
@@ -70,138 +63,46 @@ class MyWatchFaceService : WatchFaceService() {
     override fun createComplicationSlotsManager(
         currentUserStyleRepository: CurrentUserStyleRepository,
     ): ComplicationSlotsManager {
-        println("${CustomComplicationSlot.Slot0}")
-        println("${CustomComplicationSlot.Slot1}")
-        println("${CustomComplicationSlot.Slot2}")
-        println("${CustomComplicationSlot.Slot3}")
-
         val supportedTypes = listOf(
-            ComplicationType.WEIGHTED_ELEMENTS,
             ComplicationType.GOAL_PROGRESS,
             ComplicationType.RANGED_VALUE,
+            ComplicationType.WEIGHTED_ELEMENTS,
             ComplicationType.SMALL_IMAGE,
             ComplicationType.PHOTO_IMAGE,
             ComplicationType.MONOCHROMATIC_IMAGE,
             ComplicationType.SHORT_TEXT,
             ComplicationType.LONG_TEXT,
         )
-        val complicationSlot0 = ComplicationSlot.createRoundRectComplicationSlotBuilder(
-            id = CustomComplicationSlot.Slot0.id,
-            canvasComplicationFactory = defaultCanvasComplicationFactory,
-            supportedTypes = supportedTypes,
-            defaultDataSourcePolicy = DefaultComplicationDataSourcePolicy(
-                SystemDataSources.DATA_SOURCE_DATE,
-                ComplicationType.SMALL_IMAGE,
-            ),
-            bounds = ComplicationSlotBounds(
-                RectF(
-                    CustomComplicationSlot.Slot0.left,
-                    CustomComplicationSlot.Slot0.top,
-                    CustomComplicationSlot.Slot0.right,
-                    CustomComplicationSlot.Slot0.bottom,
-                )
-            ),
-        ).build()
 
-        val complicationSlot1 = ComplicationSlot.createRoundRectComplicationSlotBuilder(
-            id = CustomComplicationSlot.Slot1.id,
-            canvasComplicationFactory = defaultCanvasComplicationFactory,
-            supportedTypes = supportedTypes,
-            defaultDataSourcePolicy = DefaultComplicationDataSourcePolicy(
-                SystemDataSources.DATA_SOURCE_DAY_AND_DATE,
-                ComplicationType.SMALL_IMAGE,
-            ),
-            bounds = ComplicationSlotBounds(
-                RectF(
-                    CustomComplicationSlot.Slot1.left,
-                    CustomComplicationSlot.Slot1.top,
-                    CustomComplicationSlot.Slot1.right,
-                    CustomComplicationSlot.Slot1.bottom,
-                )
-            ),
-        ).build()
-
-        val complicationSlot2 = ComplicationSlot.createRoundRectComplicationSlotBuilder(
-            id = CustomComplicationSlot.Slot2.id,
-            canvasComplicationFactory = defaultCanvasComplicationFactory,
-            supportedTypes = supportedTypes,
-            defaultDataSourcePolicy = DefaultComplicationDataSourcePolicy(
-                SystemDataSources.DATA_SOURCE_DATE,
-                ComplicationType.SMALL_IMAGE,
-            ),
-            bounds = ComplicationSlotBounds(
-                RectF(
-                    CustomComplicationSlot.Slot2.left,
-                    CustomComplicationSlot.Slot2.top,
-                    CustomComplicationSlot.Slot2.right,
-                    CustomComplicationSlot.Slot2.bottom,
-                )
-            ),
-        ).build()
-
-        val complicationSlot3 = ComplicationSlot.createRoundRectComplicationSlotBuilder(
-            id = CustomComplicationSlot.Slot3.id,
-            canvasComplicationFactory = defaultCanvasComplicationFactory,
-            supportedTypes = supportedTypes,
-            defaultDataSourcePolicy = DefaultComplicationDataSourcePolicy(
-                SystemDataSources.DATA_SOURCE_WATCH_BATTERY,
-                ComplicationType.SMALL_IMAGE,
-            ),
-            bounds = ComplicationSlotBounds(
-                RectF(
-                    CustomComplicationSlot.Slot3.left,
-                    CustomComplicationSlot.Slot3.top,
-                    CustomComplicationSlot.Slot3.right,
-                    CustomComplicationSlot.Slot3.bottom,
-                )
-            ),
-        ).build()
-
-        val complicationSlot4 = ComplicationSlot.createRoundRectComplicationSlotBuilder(
-            id = CustomComplicationSlot.Slot4.id,
-            canvasComplicationFactory = defaultCanvasComplicationFactory,
-            supportedTypes = supportedTypes,
-            defaultDataSourcePolicy = DefaultComplicationDataSourcePolicy(
-                SystemDataSources.DATA_SOURCE_WATCH_BATTERY,
-                ComplicationType.SMALL_IMAGE,
-            ),
-            bounds = ComplicationSlotBounds(
-                RectF(
-                    CustomComplicationSlot.Slot4.left,
-                    CustomComplicationSlot.Slot4.top,
-                    CustomComplicationSlot.Slot4.right,
-                    CustomComplicationSlot.Slot4.bottom,
-                )
-            ),
-        ).build()
-
-        val complicationSlot5 = ComplicationSlot.createRoundRectComplicationSlotBuilder(
-            id = CustomComplicationSlot.Slot5.id,
-            canvasComplicationFactory = defaultCanvasComplicationFactory,
-            supportedTypes = supportedTypes,
-            defaultDataSourcePolicy = DefaultComplicationDataSourcePolicy(
-                SystemDataSources.DATA_SOURCE_WATCH_BATTERY,
-                ComplicationType.SMALL_IMAGE,
-            ),
-            bounds = ComplicationSlotBounds(
-                RectF(
-                    CustomComplicationSlot.Slot5.left,
-                    CustomComplicationSlot.Slot5.top,
-                    CustomComplicationSlot.Slot5.right,
-                    CustomComplicationSlot.Slot5.bottom,
-                )
-            ),
-        ).build()
+        val complicationSlots = listOf(
+            CustomComplicationSlot.Slot0,
+            CustomComplicationSlot.Slot1,
+            CustomComplicationSlot.Slot2,
+            CustomComplicationSlot.Slot3,
+            CustomComplicationSlot.Slot4,
+            CustomComplicationSlot.Slot5,
+        ).map { slot ->
+            ComplicationSlot.createRoundRectComplicationSlotBuilder(
+                id = slot.id,
+                canvasComplicationFactory = defaultCanvasComplicationFactory,
+                supportedTypes = supportedTypes,
+                defaultDataSourcePolicy = DefaultComplicationDataSourcePolicy(
+                    SystemDataSources.DATA_SOURCE_DAY_OF_WEEK,
+                    ComplicationType.SHORT_TEXT
+                ),
+                bounds = ComplicationSlotBounds(
+                    RectF(
+                        slot.left,
+                        slot.top,
+                        slot.right,
+                        slot.bottom,
+                    )
+                ),
+            ).build()
+        }
 
         return ComplicationSlotsManager(
-            listOf(
-                complicationSlot0,
-                complicationSlot1,
-                complicationSlot2,
-                complicationSlot3,
-                complicationSlot4,
-                complicationSlot5,
-            ),
+            complicationSlots,
             currentUserStyleRepository
         )
     }
