@@ -54,8 +54,6 @@ class MyWatchFaceService : WatchFaceService() {
                     it.rangedValuePrimaryColor = Color.RED
                     it.rangedValueSecondaryColor = Color.LTGRAY
                     it.rangedValueRingWidth = 4
-
-                    it.textSize = 50
                 }
             }
 
@@ -70,15 +68,8 @@ class MyWatchFaceService : WatchFaceService() {
     override fun createComplicationSlotsManager(
         currentUserStyleRepository: CurrentUserStyleRepository,
     ): ComplicationSlotsManager {
-        Log.d("LOG", "Build.VERSION.SDK_INT: ${Build.VERSION.SDK_INT}")
         val supportedTypes = buildList {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                add(ComplicationType.GOAL_PROGRESS)
-            }
             add(ComplicationType.RANGED_VALUE)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                add(ComplicationType.WEIGHTED_ELEMENTS)
-            }
             add(ComplicationType.LONG_TEXT)
             add(ComplicationType.SMALL_IMAGE)
             add(ComplicationType.PHOTO_IMAGE)
