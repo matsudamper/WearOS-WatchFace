@@ -18,6 +18,7 @@ watchface = "1.1.1"
 watchface-complications-data-source-ktx = "1.1.1"
 compose.compiler = "1.4.5"
 androidx-wear-watchface = "1.1.1"
+watchface-complications-rendering = "1.1.1"
 
 [libraries]
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
@@ -40,6 +41,7 @@ horologist-compose-tools = { group = "com.google.android.horologist", name = "ho
 horologist-tiles = { group = "com.google.android.horologist", name = "horologist-tiles", version.ref = "horologist-tiles" }
 watchface = { module = "androidx.wear.watchface:watchface", version.ref = "watchface" }
 watchface-complications-data-source-ktx = { group = "androidx.wear.watchface", name = "watchface-complications-data-source-ktx", version.ref = "watchface-complications-data-source-ktx" }
+watchface-complications-rendering = { module = "androidx.wear.watchface:watchface-complications-rendering", version.ref = "watchface-complications-rendering" }
 wear-watchface-editor = { module = "androidx.wear.watchface:watchface-editor", version.ref = "androidx-wear-watchface" }
 
 [plugins]
