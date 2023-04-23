@@ -44,8 +44,8 @@ class MyWatchFaceService : WatchFaceService() {
                     it.highlightColor = Color.RED
 
                     it.titleColor = Color.WHITE
-                    it.rangedValuePrimaryColor = Color.YELLOW
-                    it.rangedValueSecondaryColor = Color.CYAN
+                    it.rangedValuePrimaryColor = Color.RED
+                    it.rangedValueSecondaryColor = Color.LTGRAY
                     it.rangedValueRingWidth = 4
 
                     it.textSize = 50
@@ -67,11 +67,11 @@ class MyWatchFaceService : WatchFaceService() {
             ComplicationType.GOAL_PROGRESS,
             ComplicationType.RANGED_VALUE,
             ComplicationType.WEIGHTED_ELEMENTS,
+            ComplicationType.LONG_TEXT,
             ComplicationType.SMALL_IMAGE,
             ComplicationType.PHOTO_IMAGE,
             ComplicationType.MONOCHROMATIC_IMAGE,
             ComplicationType.SHORT_TEXT,
-            ComplicationType.LONG_TEXT,
         )
 
         val complicationSlots = listOf(

@@ -40,7 +40,7 @@ class MyRenderer(
     currentUserStyleRepository = currentUserStyleRepository,
     watchState = watchState,
     canvasType = CanvasType.HARDWARE,
-    interactiveDrawModeUpdateDelayMillis = 8L * 10,
+    interactiveDrawModeUpdateDelayMillis = 16L,
     clearWithBackgroundTintBeforeRenderingHighlightLayer = false,
 ) {
     private val digitalTimeFormatter = DateTimeFormatterBuilder()
