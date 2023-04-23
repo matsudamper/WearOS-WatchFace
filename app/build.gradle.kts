@@ -6,7 +6,6 @@ plugins {
 android {
     namespace = "net.matsudamper.watchface"
     compileSdk = 33
-
     buildToolsVersion = "33.0.1"
     defaultConfig {
         applicationId = "net.matsudamper.watchface"
