@@ -52,11 +52,9 @@ android {
 }
 
 dependencies {
-
     implementation(libs.core.ktx)
     implementation(libs.play.services.wearable)
     implementation(libs.percentlayout)
-    implementation(libs.legacy.support.v4)
     implementation(libs.recyclerview)
     implementation(platform(libs.compose.bom))
     implementation(libs.ui)
