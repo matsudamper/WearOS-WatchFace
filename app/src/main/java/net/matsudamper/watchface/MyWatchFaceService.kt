@@ -75,7 +75,6 @@ class MyWatchFaceService : WatchFaceService() {
             add(ComplicationType.PHOTO_IMAGE)
             add(ComplicationType.MONOCHROMATIC_IMAGE)
             add(ComplicationType.SHORT_TEXT)
-
         }
         val complicationSlots = listOf(
             CustomComplicationSlot.Slot0,
