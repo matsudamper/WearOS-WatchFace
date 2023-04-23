@@ -1,4 +1,4 @@
-package net.matsudamper.watchface.presentation.theme
+package net.matsudamper.watchface.setting.theme
 
 import androidx.compose.runtime.Composable
 import androidx.wear.compose.material.MaterialTheme

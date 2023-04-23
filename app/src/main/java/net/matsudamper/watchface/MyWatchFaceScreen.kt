@@ -14,7 +14,7 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.Text
-import net.matsudamper.watchface.presentation.theme.WearOSWatchFaceTheme
+import net.matsudamper.watchface.setting.theme.WearOSWatchFaceTheme
 
 @Composable
 fun MyWatchFaceScreen(greetingName: String) {

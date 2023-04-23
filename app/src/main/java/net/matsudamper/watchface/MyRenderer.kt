@@ -4,11 +4,11 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.Path
 import android.graphics.Rect
 import android.graphics.RectF
+import android.util.Log
 import android.view.SurfaceHolder
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.wear.watchface.CanvasType
 import androidx.wear.watchface.ComplicationSlotsManager
 import androidx.wear.watchface.DrawMode
@@ -40,9 +40,15 @@ class MyRenderer(
     currentUserStyleRepository = currentUserStyleRepository,
     watchState = watchState,
     canvasType = CanvasType.HARDWARE,
-    interactiveDrawModeUpdateDelayMillis = 8L,
+    interactiveDrawModeUpdateDelayMillis = 8L * 10,
     clearWithBackgroundTintBeforeRenderingHighlightLayer = false,
 ) {
+    private val digitalTimeFormatter = DateTimeFormatterBuilder()
+        .appendValue(ChronoField.HOUR_OF_DAY, 2)
+        .appendLiteral(":")
+        .appendValue(ChronoField.MINUTE_OF_HOUR, 2)
+        .toFormatter()
+
     private val outCirclePadding = 4f
 
     private val longTimeDiskPaint = Paint().also {
@@ -101,8 +107,6 @@ class MyRenderer(
         zonedDateTime: ZonedDateTime,
         sharedAssets: SharedAssets
     ) {
-//        Log.d("LOG", "render: ${renderParameters.watchFaceLayers.toList()}")
-
         val backgroundColor = if (renderParameters.drawMode == DrawMode.AMBIENT) {
             Color.DKGRAY
         } else {
@@ -128,31 +132,37 @@ class MyRenderer(
                 canvas = canvas,
                 bounds = bounds,
             )
-            (1..6).forEach { index ->
-                val betWeenAngle: Double = (360 / 6f).toDouble()
-                drawCircle(
-                    canvas = canvas,
-                    bounds = bounds,
-                    angle = betWeenAngle * index,
-                    centerFraction = 0.25f,
-                    sizeFraction = 0.25f,
-                )
-            }
-            drawCircle(
-                canvas = canvas,
-                bounds = bounds,
-                slot = CustomComplicationSlot.Slot0,
-            )
-            drawCircle(
-                canvas = canvas,
-                bounds = bounds,
-                slot = CustomComplicationSlot.Slot1,
-            )
+//            drawCircle(
+//                canvas = canvas,
+//                bounds = bounds,
+//                slot = CustomComplicationSlot.Slot0,
+//            )
+//            drawCircle(
+//                canvas = canvas,
+//                bounds = bounds,
+//                slot = CustomComplicationSlot.Slot1,
+//            )
+//            drawCircle(
+//                canvas = canvas,
+//                bounds = bounds,
+//                slot = CustomComplicationSlot.Slot2,
+//            )
+//            drawCircle(
+//                canvas = canvas,
+//                bounds = bounds,
+//                slot = CustomComplicationSlot.Slot3,
+//            )
         }
 
+//        Log.d("LOG", "slots=${
+//            complicationSlotsManager.complicationSlots
+//                .filter { it.value.enabled }
+//                .map { it.key }
+//        }")
         for ((_, complication) in complicationSlotsManager.complicationSlots) {
 //            Log.d("LOG", "complication.enabled: ${complication.enabled}")
             if (complication.enabled) {
+                Log.d("LOG", "${complication.complicationSlotBounds}")
                 complication.render(canvas, zonedDateTime, renderParameters)
             }
         }
@@ -212,13 +222,7 @@ class MyRenderer(
         zonedDateTime: ZonedDateTime,
         bounds: Rect,
     ) {
-        val text = zonedDateTime.format(
-            DateTimeFormatterBuilder()
-                .appendValue(ChronoField.HOUR_OF_DAY, 2)
-                .appendLiteral(":")
-                .appendValue(ChronoField.MINUTE_OF_HOUR, 2)
-                .toFormatter()
-        )
+        val text = zonedDateTime.format(digitalTimeFormatter)
 
         val textBounds = Rect().also { digitalTimePaint.getTextBounds(text, 0, text.length, it) }
 

@@ -1,4 +1,4 @@
-package net.matsudamper.watchface.presentation.theme
+package net.matsudamper.watchface.setting.theme
 
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
