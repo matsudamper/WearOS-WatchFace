@@ -63,17 +63,22 @@ class MyWatchFaceService : WatchFaceService() {
     override fun createComplicationSlotsManager(
         currentUserStyleRepository: CurrentUserStyleRepository,
     ): ComplicationSlotsManager {
-        val supportedTypes = listOf(
-            ComplicationType.GOAL_PROGRESS,
-            ComplicationType.RANGED_VALUE,
-            ComplicationType.WEIGHTED_ELEMENTS,
-            ComplicationType.LONG_TEXT,
-            ComplicationType.SMALL_IMAGE,
-            ComplicationType.PHOTO_IMAGE,
-            ComplicationType.MONOCHROMATIC_IMAGE,
-            ComplicationType.SHORT_TEXT,
-        )
+        Log.d("LOG", "Build.VERSION.SDK_INT: ${Build.VERSION.SDK_INT}")
+        val supportedTypes = buildList {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                add(ComplicationType.GOAL_PROGRESS)
+            }
+            add(ComplicationType.RANGED_VALUE)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                add(ComplicationType.WEIGHTED_ELEMENTS)
+            }
+            add(ComplicationType.LONG_TEXT)
+            add(ComplicationType.SMALL_IMAGE)
+            add(ComplicationType.PHOTO_IMAGE)
+            add(ComplicationType.MONOCHROMATIC_IMAGE)
+            add(ComplicationType.SHORT_TEXT)
 
+        }
         val complicationSlots = listOf(
             CustomComplicationSlot.Slot0,
             CustomComplicationSlot.Slot1,
