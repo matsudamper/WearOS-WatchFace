@@ -4,11 +4,10 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
-import android.graphics.Path
 import android.graphics.Rect
 import android.graphics.RectF
-import android.util.Log
 import android.view.SurfaceHolder
+import androidx.core.graphics.withRotation
 import androidx.wear.watchface.CanvasType
 import androidx.wear.watchface.ComplicationSlotsManager
 import androidx.wear.watchface.DrawMode
@@ -62,6 +61,7 @@ class MyRenderer(
     private val digitalTimePaint = Paint().also {
         it.color = Color.WHITE
         it.textSize = 36f
+        it.isAntiAlias = true
     }
     private val outCirclePaint = Paint().also { paint ->
         paint.style = Paint.Style.STROKE
@@ -71,12 +71,26 @@ class MyRenderer(
     private val timeNumberPaint = Paint().also {
         it.color = Color.WHITE
         it.textSize = 24f
+        it.isAntiAlias = true
     }
     private val functionCirclePaint = Paint().also {
         it.style = Paint.Style.STROKE
         it.color = Color.LTGRAY
         it.strokeWidth = 2f
     }
+    private val hourHandPaint = Paint().also { paint ->
+        paint.color = Color.GREEN
+        paint.strokeWidth = 2f
+        paint.style = Paint.Style.STROKE
+        paint.isAntiAlias = true
+    }
+    private val minuteHandPaint = Paint().also { paint ->
+        paint.color = Color.GREEN
+        paint.strokeWidth = 2f
+        paint.style = Paint.Style.STROKE
+        paint.isAntiAlias = true
+    }
+
 
     private val scope: CoroutineScope =
         CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
@@ -132,39 +146,71 @@ class MyRenderer(
                 canvas = canvas,
                 bounds = bounds,
             )
-//            drawCircle(
-//                canvas = canvas,
-//                bounds = bounds,
-//                slot = CustomComplicationSlot.Slot0,
-//            )
-//            drawCircle(
-//                canvas = canvas,
-//                bounds = bounds,
-//                slot = CustomComplicationSlot.Slot1,
-//            )
-//            drawCircle(
-//                canvas = canvas,
-//                bounds = bounds,
-//                slot = CustomComplicationSlot.Slot2,
-//            )
-//            drawCircle(
-//                canvas = canvas,
-//                bounds = bounds,
-//                slot = CustomComplicationSlot.Slot3,
-//            )
+            // 短針
+            drawTimeRoundRect(
+                canvas = canvas,
+                bounds = bounds,
+                degrees = run {
+                    val oneHourAndre = 360f / 12f
+                    val minAngle = oneHourAndre / 60f
+                    val secAngle = minAngle / 60f
+
+                    (oneHourAndre.times(zonedDateTime.hour % 12))
+                        .plus(minAngle * zonedDateTime.minute)
+                        .plus(secAngle * zonedDateTime.second)
+
+                },
+                widthFraction = 0.1f,
+                innerPaddingFraction = 0.1f,
+                outerPaddingFraction = 0.5f,
+                paint = hourHandPaint
+            )
+            // 長針
+            drawTimeRoundRect(
+                canvas = canvas,
+                bounds = bounds,
+                degrees = run {
+                    val minAngle = 360f / 60f
+                    minAngle * zonedDateTime.minute
+                },
+                widthFraction = 0.05f,
+                innerPaddingFraction = 0.1f,
+                outerPaddingFraction = 0.2f,
+                paint = minuteHandPaint
+            )
         }
 
-//        Log.d("LOG", "slots=${
-//            complicationSlotsManager.complicationSlots
-//                .filter { it.value.enabled }
-//                .map { it.key }
-//        }")
         for ((_, complication) in complicationSlotsManager.complicationSlots) {
-//            Log.d("LOG", "complication.enabled: ${complication.enabled}")
             if (complication.enabled) {
-                Log.d("LOG", "${complication.complicationSlotBounds}")
                 complication.render(canvas, zonedDateTime, renderParameters)
             }
+        }
+    }
+
+    private fun drawTimeRoundRect(
+        canvas: Canvas,
+        bounds: Rect,
+        degrees: Float,
+        widthFraction: Float,
+        outerPaddingFraction: Float,
+        innerPaddingFraction: Float,
+        paint: Paint,
+    ) {
+        val radius: Float = min(bounds.width(), bounds.height()) / 2f
+        val halfWidth = (radius * widthFraction) / 2
+
+        canvas.withRotation(degrees, centerX, centerY) {
+            canvas.drawRoundRect(
+                RectF(
+                    centerX - halfWidth,
+                    radius * outerPaddingFraction,
+                    centerX + halfWidth,
+                    centerY + halfWidth,
+                ),
+                halfWidth,
+                halfWidth,
+                paint,
+            )
         }
     }
 
