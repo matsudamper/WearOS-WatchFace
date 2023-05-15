@@ -50,33 +50,36 @@ class MyRenderer(
 
     private val outCirclePadding = 4f
 
-    private val longTimeDiskPaint = Paint().also {
-        it.color = Color.WHITE
-        it.strokeWidth = 2f
+    private val longTimeDiskPaint = Paint().also { paint ->
+        paint.color = Color.WHITE
+        paint.strokeWidth = 2f
+        paint.isAntiAlias = true
     }
-    private val shortTimeDiskPaint = Paint().also {
-        it.color = Color.DKGRAY
-        it.strokeWidth = 2f
+    private val shortTimeDiskPaint = Paint().also { paint ->
+        paint.color = Color.DKGRAY
+        paint.strokeWidth = 2f
+        paint.isAntiAlias = true
     }
-    private val digitalTimePaint = Paint().also {
-        it.color = Color.WHITE
-        it.textSize = 36f
-        it.isAntiAlias = true
+    private val digitalTimePaint = Paint().also { paint ->
+        paint.color = Color.WHITE
+        paint.textSize = 36f
+        paint.isAntiAlias = true
     }
     private val outCirclePaint = Paint().also { paint ->
         paint.style = Paint.Style.STROKE
         paint.strokeWidth = outCirclePadding
         paint.color = Color.MAGENTA
+        paint.isAntiAlias = true
     }
-    private val timeNumberPaint = Paint().also {
-        it.color = Color.WHITE
-        it.textSize = 24f
-        it.isAntiAlias = true
+    private val timeNumberPaint = Paint().also { paint ->
+        paint.color = Color.WHITE
+        paint.textSize = 24f
+        paint.isAntiAlias = true
     }
-    private val functionCirclePaint = Paint().also {
-        it.style = Paint.Style.STROKE
-        it.color = Color.LTGRAY
-        it.strokeWidth = 2f
+    private val functionCirclePaint = Paint().also { paint ->
+        paint.style = Paint.Style.STROKE
+        paint.color = Color.LTGRAY
+        paint.strokeWidth = 2f
     }
     private val hourHandPaint = Paint().also { paint ->
         paint.color = Color.GREEN
