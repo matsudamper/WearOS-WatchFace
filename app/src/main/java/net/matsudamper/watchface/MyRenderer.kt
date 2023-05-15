@@ -131,12 +131,6 @@ class MyRenderer(
         }
 
         if (renderParameters.watchFaceLayers.contains(WatchFaceLayer.COMPLICATIONS_OVERLAY)) {
-            drawDigitalTime(
-                y = bounds.height() * 0.5f,
-                canvas = canvas,
-                zonedDateTime = zonedDateTime,
-                bounds = bounds,
-            )
             drawOutCircle(
                 canvas = canvas,
                 bounds = bounds,
@@ -180,6 +174,12 @@ class MyRenderer(
                 innerPaddingFraction = 0.1f,
                 outerPaddingFraction = 0.15f,
                 paint = minuteHandPaint
+            )
+            drawDigitalTime(
+                y = bounds.height() * 0.5f,
+                canvas = canvas,
+                zonedDateTime = zonedDateTime,
+                bounds = bounds,
             )
         }
 
