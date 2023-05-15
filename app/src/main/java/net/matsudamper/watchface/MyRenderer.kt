@@ -175,7 +175,7 @@ class MyRenderer(
                 },
                 widthFraction = 0.05f,
                 innerPaddingFraction = 0.1f,
-                outerPaddingFraction = 0.2f,
+                outerPaddingFraction = 0.15f,
                 paint = minuteHandPaint
             )
         }
