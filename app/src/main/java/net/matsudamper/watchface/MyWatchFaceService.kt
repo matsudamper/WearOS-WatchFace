@@ -70,10 +70,10 @@ class MyWatchFaceService : WatchFaceService() {
     ): ComplicationSlotsManager {
         val supportedTypes = buildList {
             add(ComplicationType.RANGED_VALUE)
-            add(ComplicationType.LONG_TEXT)
-            add(ComplicationType.SMALL_IMAGE)
             add(ComplicationType.PHOTO_IMAGE)
+            add(ComplicationType.SMALL_IMAGE)
             add(ComplicationType.MONOCHROMATIC_IMAGE)
+            add(ComplicationType.LONG_TEXT)
             add(ComplicationType.SHORT_TEXT)
         }
         val complicationSlots = listOf(
