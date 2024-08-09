@@ -1,6 +1,6 @@
 [versions]
 com-android-application = "8.5.2"
-org-jetbrains-kotlin-android = "1.8.20"
+org-jetbrains-kotlin-android = "2.0.10"
 core-ktx = "1.13.1"
 play-services-wearable = "18.2.0"
 percentlayout = "1.0.0"
@@ -16,7 +16,6 @@ horologist-compose-tools = "0.1.15"
 horologist-tiles = "0.1.15"
 watchface = "1.2.1"
 watchface-complications-data-source-ktx = "1.2.1"
-compose.compiler = "1.4.5"
 androidx-wear-watchface = "1.2.1"
 watchface-complications-rendering = "1.2.1"
 
