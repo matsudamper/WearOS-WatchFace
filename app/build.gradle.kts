@@ -5,12 +5,12 @@ plugins {
 
 android {
     namespace = "net.matsudamper.watchface"
-    compileSdk = 35
-    buildToolsVersion = "35.0.0"
+    compileSdk = libs.versions.compileSdk.get().toInt()
+    buildToolsVersion = libs.versions.buildToolsVersion.get()
     defaultConfig {
         applicationId = "net.matsudamper.watchface"
-        minSdk = 30
-        targetSdk = 33
+        minSdk = libs.versions.minSdk.get().toInt()
+        targetSdk = libs.versions.targetSdk.get().toInt()
         versionCode = 1
         versionName = "1.0"
         vectorDrawables {
