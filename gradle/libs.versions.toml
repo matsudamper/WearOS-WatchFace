@@ -4,7 +4,7 @@ buildToolsVersion = "35.0.0"
 minSdk = "30"
 targetSdk = "35"
 com-android-application = "8.5.2"
-org-jetbrains-kotlin-android = "2.0.10"
+kotlin = "2.0.10"
 core-ktx = "1.13.1"
 play-services-wearable = "18.2.0"
 percentlayout = "1.0.0"
@@ -49,7 +49,7 @@ wear-watchface-editor = { module = "androidx.wear.watchface:watchface-editor", v
 
 [plugins]
 com-android-application = { id = "com.android.application", version.ref = "com-android-application" }
-org-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "org-jetbrains-kotlin-android" }
+org-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 
 [bundles]
-
